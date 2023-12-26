@@ -1,333 +1,125 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:the_jungle_ferry/screen/IntroPage.dart';
-import 'package:the_jungle_ferry/screen/LoginPage.dart';
-import 'package:the_jungle_ferry/screen/RegisterPage.dart';
-
-import 'HomeScreen.dart';
-import 'constants/ConstantColors.dart';
-import 'constants/ConstantWidgets.dart';
-import 'constants/Constants.dart';
-import 'constants/SizeConfig.dart';
-import 'data/PrefData.dart';
-import 'generated/l10n.dart';
-
 
 void main() {
-  // await SharedPreferences.getInstance();
-
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // SizeConfig().init(context);
     return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        S.delegate
-      ],
-      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: primaryColor,
-        primaryColorDark: primaryColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: primaryColor),
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  // final String title;
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class ChoosePage extends StatefulWidget {
-  @override
-  _ChoosePage createState() => _ChoosePage();
-}
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
 
-class _ChoosePage extends State<ChoosePage> {
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double margin = MediaQuery.of(context).size.width * 0.03;
-    double left = MediaQuery.of(context).size.width * 0.05;
-    // double margin=10;
-    // double left=5;
-    return WillPopScope(
-      child: Scaffold(
-        body: Container(
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(
-                    image: ExactAssetImage(
-                        Constants.assetsImagePath + "new_user.jpeg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              // Expanded(
-              //   child:
-              Container(
-                color: Colors.black54,
-                padding: EdgeInsets.only(bottom: margin),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(
-                            top: margin,
-                            bottom: margin,
-                            left: left,
-                            right: left),
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegisterPage()));
-                          },
-                          child: Center(
-                              child: getCustomText(
-                                  S.of(context).register,
-                                  Colors.white,
-                                  1,
-                                  TextAlign.center,
-                                  FontWeight.w900,
-                                  15)),
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(
-                            bottom: margin, left: left, right: left),
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
-                          },
-                          child: Center(
-                            child: getCustomText(
-                                S.of(context).login,
-                                Colors.black87,
-                                1,
-                                TextAlign.center,
-                                FontWeight.w900,
-                                15),
-                          ),
-                        )),
-                  ],
-                ),
-              )
-              // flex: 1,
-              // )
-            ],
-          ),
-        ),
-      ),
-      onWillPop: () async {
-        Constants.stopApp();
-        return false;
-      },
-    );
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    // WidgetsBinding.instance.addObserver(this);
-    Constants.setThemePosition();
-
-    signInValue();
-    super.initState();
-
-    // setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return WillPopScope(
-        onWillPop: _requestPop,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-           // backgroundColor: ConstantColors.bgColor,
-            body: Container(
-              child: splashPage(),
-              // child: getSignInWidget(),
-            )));
-  }
-
-  Future<bool> _requestPop() {
-    Constants.stopApp();
-    return Future.value(false);
-  }
-
-  bool _isSignIn = false;
-  bool _isIntro = false;
-
-  void signInValue() async {
-    _isSignIn = await PrefData.getIsSignIn();
-    _isIntro = await PrefData.getIsIntro();
+  void _incrementCounter() {
     setState(() {
-      Timer(const Duration(seconds: 3), () {
-        if (_isIntro) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => IntroPage(),
-              ));
-        } else if (_isSignIn) {
-          if (kDebugMode) {
-            print("isSignIn--$_isSignIn");
-          }
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(0),
-              ));
-        } else {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChoosePage(),
-              ));
-        }
-      });
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
     });
   }
 
-  Widget getSignInWidget() {
-    if (_isSignIn) {
-      return splashPage();
-    } else {
-      return choosePage();
-    }
-  }
-
-  Widget splashPage() {
-    // SizeConfig().init(context);
-    return Align(
-        alignment: Alignment.center,
-        child: Image.asset(
-          "assets/app_logo.png",
-          // Constants.assetsImagePath + "logo.png",
-          fit: BoxFit.cover,
-          width: SizeConfig.safeBlockHorizontal! * 55,
-          height: SizeConfig.safeBlockHorizontal! * 55,
-        ));
-  }
-
-  Widget choosePage() {
-    double margin = MediaQuery.of(context).size.width * 0.03;
-    double left = MediaQuery.of(context).size.width * 0.05;
-    return Container(
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              image: DecorationImage(
-                image: ExactAssetImage(
-                    Constants.assetsImagePath + "background.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // Expanded(
-          //   child:
-          Container(
-            color: Colors.black54,
-            margin: EdgeInsets.only(bottom: margin),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  child: Container(
-                      margin: EdgeInsets.only(
-                          top: margin, bottom: margin, left: left, right: left),
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: InkWell(
-                        child: Center(
-                            child: getCustomText(
-                                S.of(context).register,
-                                Colors.white,
-                                1,
-                                TextAlign.center,
-                                FontWeight.w900,
-                                15)),
-                      )),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterPage()));
-                  },
-                ),
-                InkWell(
-                  child: Container(
-                      margin: EdgeInsets.only(
-                          bottom: margin, left: left, right: left),
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: InkWell(
-                        child: Center(
-                          child: getCustomText(
-                              S.of(context).login,
-                              Colors.black87,
-                              1,
-                              TextAlign.center,
-                              FontWeight.w900,
-                              15),
-                        ),
-                      )),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                ),
-              ],
-            ),
-          )
-          // flex: 1,
-          // )
-        ],
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
